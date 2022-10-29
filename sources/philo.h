@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/29 17:43:28 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/29 19:09:36 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,15 @@
 # include <unistd.h>
 # include <pthread.h>
 
-typedef struct	s_data
+typedef struct s_data
 {
-	int	num_philos;
-	int	die_time;
-	int	eat_time;
-	int	sleep_time;
-	int	counter;
-	int	*forks;
+	int				num_philos;
+	int				die_time;
+	int				eat_time;
+	int				sleep_time;
+	int				cycle_length;
+	int				counter;
+	int				*forks;
 	pthread_mutex_t	mutex;
 }	t_data;
 

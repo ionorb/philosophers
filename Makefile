@@ -25,7 +25,6 @@ all:	$(NAME)
 
 $(NAME):	$(OBJECTS) $(HEADER)
 	$(CC) $(CFLAGS) $(PFLAGS) $(OBJECTS) -o $(NAME)
-	$(RM) $(OBJECTS)
 
 clean:
 	$(RM) $(OBJECTS)
