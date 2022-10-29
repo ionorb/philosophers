@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/28 23:24:46 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/29 17:43:28 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,12 @@
 
 typedef struct	s_data
 {
-	int	number_of_philosophers;
-	int	time_to_die;
-	int	time_to_eat;
-	int	time_to_sleep;
+	int	num_philos;
+	int	die_time;
+	int	eat_time;
+	int	sleep_time;
 	int	counter;
+	int	*forks;
 	pthread_mutex_t	mutex;
 }	t_data;
 

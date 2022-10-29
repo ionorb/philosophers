@@ -14,7 +14,7 @@ CC 				=	gcc
 
 RM				=	rm -f
 
-CFLAGS			=	-g3 #-Wall -Wextra -Werror
+CFLAGS			=	-g3 -Wall -Wextra -Werror
 
 PFLAGS			=	-lpthread
 
@@ -32,5 +32,7 @@ clean:
 
 fclean: clean
 	$(RM) $(NAME)
+
+re:	fclean all
 
 .PHONY:		all clean fclean re
