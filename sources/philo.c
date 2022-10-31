@@ -6,23 +6,28 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 18:03:13 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 18:43:55 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 21:12:29 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_time(void)
+long int	*ft_time(void)
 {
+	long int	*timi;
 	struct timeval current_time;
+
+	timi = malloc(sizeof (int) * 2);
 	gettimeofday(&current_time, NULL);
-	return (current_time.tv_sec - 1667236200);
+	timi[1] = current_time.tv_sec;
+	timi[2] = current_time.tv_usec;
+	return (timi);
 }
 
 void	philo_eat(t_data *dat, int id)
 {
-	printf("<%d> %d is eating\n", ft_time(), id);
-	sleep(dat->eat_time / 1000);
+	printf("<%ld.%ld> %d is eating\n", ft_time()[1], ft_time()[2], id);
+	usleep(dat->eat_time * 1000);
 }
 
 void	ft_pickup(t_data *dat, int id)
@@ -35,16 +40,18 @@ void	ft_pickup(t_data *dat, int id)
 	while (fork1 || fork2)
 	{
 		pthread_mutex_lock(&dat->mutex);
-		if (dat->forks[id])
+		if (dat->forks[id - 1])
 		{
-			dat->forks[id] = 0;
-			printf("<%d> %d has taken fork %d\n", ft_time(), id, id);
+		//	printf("fork[%d]: %d\n", id, dat->forks[id]);
+			dat->forks[id - 1] = 0;
+			printf("<%ld.%ld> %d has taken fork %d\n", ft_time()[1], ft_time()[2], id, id - 1);
 			fork1 = 0;
 		}
-		if (dat->forks[(id - 1) % dat->num_philos])
+		if (dat->forks[id % dat->num_philos])
 		{
-			dat->forks[(id - 1) % dat->num_philos] = 0;
-			printf("<%d> %d has taken fork %d\n", ft_time(), id, (id - 1) % dat->num_philos);
+		//	printf("fork[%d]: %d\n", (id - 1) % dat->num_philos, dat->forks[(id - 1) % dat->num_philos]);
+			dat->forks[id  % dat->num_philos] = 0;
+			printf("<%ld.%ld> %d has taken fork %d\n", ft_time()[1], ft_time()[2], id, id % dat->num_philos);
 			fork2 = 0;
 		}
 		pthread_mutex_unlock(&dat->mutex);
@@ -54,51 +61,31 @@ void	ft_pickup(t_data *dat, int id)
 void	ft_putdown(t_data *dat, int id)
 {
 	pthread_mutex_lock(&dat->mutex);
-	dat->forks[id] = 1;
+	dat->forks[id - 1] = 1;
 	pthread_mutex_unlock(&dat->mutex);
-	printf("<%d> %d has put down a fork\n", ft_time(), id);
+	printf("<%ld.%ld> %d has put down fork %d\n", ft_time()[1], ft_time()[2], id, id - 1);
 	pthread_mutex_lock(&dat->mutex);
-	dat->forks[(id - 1) % dat->num_philos] = 1;
+	dat->forks[id % dat->num_philos] = 1;
 	pthread_mutex_unlock(&dat->mutex);
-	printf("<%d> %d has put down a fork\n", ft_time(), id);
+	printf("<%ld.%ld> %d has put down fork %d\n", ft_time()[1], ft_time()[2], id, id % dat->num_philos);
 }
 
 void	philo_sleep(t_data *dat, int id)
 {
-	printf("<%d> %d is sleeping\n", ft_time(), id);
-	sleep(dat->sleep_time / 1000);
-	printf("<%d> %d is thinking\n", ft_time(), id);
+	printf("<%ld.%ld> %d is sleeping\n", ft_time()[1], ft_time()[2], id);
+	usleep(dat->sleep_time * 1000);
+	printf("<%ld.%ld> %d is thinking\n", ft_time()[1], ft_time()[2], id);
 }
 
-int	philo_does_things(t_data *dat, int id, int *is_sitting)
+int	philo_does_things(t_data *dat, int id)
 {
 	int	is_dead;
 
 	is_dead = 0;
-	pthread_mutex_lock(&dat->mutex);
-	if (*is_sitting && dat->sitting == dat->num_philos)
-	{
-		*is_sitting = 0;
-		dat->sitting -= 1;
-	//	printf("<%d> %d stood up\n", ft_time(), id);
-	}
-	else if (!*is_sitting)
-	{
-		*is_sitting = 1;
-		dat->sitting += 1;
-	//	printf("<%d> %d sat down\n", ft_time(), id);
-	}
-	if (*is_sitting && dat->sitting == dat->num_philos - 1)
-	{
-		pthread_mutex_unlock(&dat->mutex);
-		ft_pickup(dat, id);
-		philo_eat(dat, id);
-		ft_putdown(dat, id);
-		philo_sleep(dat, id);
-		pthread_mutex_lock(&dat->mutex);
-	}
-//	printf("sitting: %d\n", dat->sitting);
-	pthread_mutex_unlock(&dat->mutex);
+	ft_pickup(dat, id);
+	philo_eat(dat, id);
+	ft_putdown(dat, id);
+	philo_sleep(dat, id);
 	return (is_dead);
 }
 
@@ -106,7 +93,6 @@ void	*mythread(void *data)
 {
 	t_data	*dat;
 	int		is_dead;
-	int		is_sitting;
 	int		id;
 
 	dat = data;
@@ -115,9 +101,10 @@ void	*mythread(void *data)
 	id = dat->counter;
 	pthread_mutex_unlock(&dat->mutex);
 	is_dead = 0;
-	is_sitting = 1;
+	if (!(id % 2))
+		usleep(100);
 	while (!is_dead)
-		is_dead = philo_does_things(dat, id, &is_sitting);
+		is_dead = philo_does_things(dat, id);
 //	sleep(0.9);
 	return (NULL);
 }
