@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 18:39:39 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 21:59:36 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,19 @@ typedef struct s_data
 	int				*forks;
 	int				sitting;
 	int				death;
+	long int		begin_time;
 	pthread_mutex_t	mutex;
 }	t_data;
 
+typedef struct s_philo
+{
+	long int	begin_time;
+	int			last_meal;
+	int			id;
+}	t_philo;
+
 //utils
+long int	ft_time(long int begin_time);
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 int		ft_atoi(const char *nptr);

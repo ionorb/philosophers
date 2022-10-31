@@ -6,11 +6,19 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 22:37:38 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/28 22:52:48 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 21:58:56 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+long int	ft_time(long int begin_time)
+{
+	struct timeval current_time;
+
+	gettimeofday(&current_time, NULL);
+	return (current_time.tv_sec * 1000 + current_time.tv_usec / 1000 - begin_time);
+}
 
 void	ft_putstr_fd(char *s, int fd)
 {

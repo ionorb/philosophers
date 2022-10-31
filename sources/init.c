@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 18:37:50 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 18:38:22 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 21:51:35 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void	init_forks(t_data *data)
 
 t_data	*init_data(int ac, char **av)
 {
-	t_data	*data;
+	t_data			*data;
+	struct timeval	current_time;
 
 	if (ac < 5)
 		ft_exit_msg("not enough arguments");
@@ -46,5 +47,7 @@ t_data	*init_data(int ac, char **av)
 //	data->cycle_length = data->sleep_time + data->eat_time
 	pthread_mutex_init(&data->mutex, NULL);
 	init_forks(data);
+	gettimeofday(&current_time, NULL);
+	data->begin_time =current_time.tv_sec * 1000 + current_time.tv_usec / 1000;
 	return (data);
 }

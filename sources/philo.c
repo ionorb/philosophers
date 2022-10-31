@@ -6,31 +6,19 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 18:03:13 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 21:12:29 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 22:00:33 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long int	*ft_time(void)
+void	philo_eat(t_data *dat, t_philo *philo)
 {
-	long int	*timi;
-	struct timeval current_time;
-
-	timi = malloc(sizeof (int) * 2);
-	gettimeofday(&current_time, NULL);
-	timi[1] = current_time.tv_sec;
-	timi[2] = current_time.tv_usec;
-	return (timi);
-}
-
-void	philo_eat(t_data *dat, int id)
-{
-	printf("<%ld.%ld> %d is eating\n", ft_time()[1], ft_time()[2], id);
+	printf("<%ld> %d is eating\n", ft_time(philo->begin_time), philo->id);
 	usleep(dat->eat_time * 1000);
 }
 
-void	ft_pickup(t_data *dat, int id)
+void	ft_pickup(t_data *dat, t_philo *philo)
 {
 	int	fork1;
 	int	fork2;
@@ -40,71 +28,76 @@ void	ft_pickup(t_data *dat, int id)
 	while (fork1 || fork2)
 	{
 		pthread_mutex_lock(&dat->mutex);
-		if (dat->forks[id - 1])
+		if (dat->forks[philo->id - 1])
 		{
 		//	printf("fork[%d]: %d\n", id, dat->forks[id]);
-			dat->forks[id - 1] = 0;
-			printf("<%ld.%ld> %d has taken fork %d\n", ft_time()[1], ft_time()[2], id, id - 1);
+			dat->forks[philo->id - 1] = 0;
+			printf("<%ld> %d has taken fork %d\n", ft_time(philo->begin_time), philo->id, philo->id - 1);
 			fork1 = 0;
 		}
-		if (dat->forks[id % dat->num_philos])
+		if (dat->forks[philo->id % dat->num_philos])
 		{
 		//	printf("fork[%d]: %d\n", (id - 1) % dat->num_philos, dat->forks[(id - 1) % dat->num_philos]);
-			dat->forks[id  % dat->num_philos] = 0;
-			printf("<%ld.%ld> %d has taken fork %d\n", ft_time()[1], ft_time()[2], id, id % dat->num_philos);
+			dat->forks[philo->id  % dat->num_philos] = 0;
+			printf("<%ld> %d has taken fork %d\n", ft_time(philo->begin_time), philo->id, philo->id % dat->num_philos);
 			fork2 = 0;
 		}
 		pthread_mutex_unlock(&dat->mutex);
 	}
 }
 
-void	ft_putdown(t_data *dat, int id)
+void	ft_putdown(t_data *dat, t_philo *philo)
 {
 	pthread_mutex_lock(&dat->mutex);
-	dat->forks[id - 1] = 1;
+	dat->forks[philo->id - 1] = 1;
+	printf("<%ld> %d has put down fork %d\n", ft_time(philo->begin_time), philo->id, philo->id - 1);
 	pthread_mutex_unlock(&dat->mutex);
-	printf("<%ld.%ld> %d has put down fork %d\n", ft_time()[1], ft_time()[2], id, id - 1);
 	pthread_mutex_lock(&dat->mutex);
-	dat->forks[id % dat->num_philos] = 1;
+	dat->forks[philo->id % dat->num_philos] = 1;
+	printf("<%ld> %d has put down fork %d\n", ft_time(philo->begin_time), philo->id, philo->id % dat->num_philos);
 	pthread_mutex_unlock(&dat->mutex);
-	printf("<%ld.%ld> %d has put down fork %d\n", ft_time()[1], ft_time()[2], id, id % dat->num_philos);
 }
 
-void	philo_sleep(t_data *dat, int id)
+void	philo_sleep(t_data *dat, t_philo *philo)
 {
-	printf("<%ld.%ld> %d is sleeping\n", ft_time()[1], ft_time()[2], id);
+	printf("<%ld> %d is sleeping\n", ft_time(philo->begin_time), philo->id);
 	usleep(dat->sleep_time * 1000);
-	printf("<%ld.%ld> %d is thinking\n", ft_time()[1], ft_time()[2], id);
+	printf("<%ld> %d is thinking\n", ft_time(philo->begin_time), philo->id);
 }
 
-int	philo_does_things(t_data *dat, int id)
+int	philo_does_things(t_data *dat, t_philo *philo)
 {
 	int	is_dead;
 
 	is_dead = 0;
-	ft_pickup(dat, id);
-	philo_eat(dat, id);
-	ft_putdown(dat, id);
-	philo_sleep(dat, id);
+	ft_pickup(dat, philo);
+	philo_eat(dat, philo);
+	philo->last_meal = ft_time(philo->begin_time) - philo->begin_time;
+//	printf("lastmeal %d\n", *last_meal);
+	ft_putdown(dat, philo);
+	philo_sleep(dat, philo);
 	return (is_dead);
 }
 
 void	*mythread(void *data)
 {
-	t_data	*dat;
-	int		is_dead;
-	int		id;
+	t_data		*dat;
+	t_philo		*philo;
+	int			is_dead;
 
 	dat = data;
+	philo = malloc(sizeof (t_philo));
 	pthread_mutex_lock(&dat->mutex);
 	dat->counter++;
-	id = dat->counter;
+	philo->id = dat->counter;
+	philo->begin_time = dat->begin_time;
 	pthread_mutex_unlock(&dat->mutex);
 	is_dead = 0;
-	if (!(id % 2))
+	philo->last_meal = ft_time(philo->begin_time);
+	if (!(philo->id % 2))
 		usleep(100);
 	while (!is_dead)
-		is_dead = philo_does_things(dat, id);
+		is_dead = philo_does_things(dat, philo);
 //	sleep(0.9);
 	return (NULL);
 }
