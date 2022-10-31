@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 16:48:43 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:02:53 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <pthread.h>
+# include <sys/time.h>
 
 typedef struct s_data
 {

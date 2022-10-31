@@ -6,11 +6,18 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 18:03:13 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 17:09:46 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:34:06 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	ft_time(void)
+{
+	struct timeval current_time;
+	gettimeofday(&current_time, NULL);
+	return (current_time.tv_sec - 1667236200);
+}
 
 void	philo_eat(t_data *dat, int id)
 {
@@ -21,57 +28,93 @@ void	philo_eat(t_data *dat, int id)
 //	fork_left = i;
 //	if (forks[fork_right] == 1 || forks[fork_left] == 1)
 //		write(2, "oh no\n", 6);
-	if (1)
-	{
-		printf("%d has taken a fork\n", id);
 //		dat->forks[fork_right] = 1;
-		printf("%d has taken a fork\n", id);
 //		dat->forks[fork_left] = 1;
-	}
-	printf("%d is eating\n", id);
+	(void)id;
+	printf("<%d> %d is eating\n", ft_time(), id);
 	sleep(dat->eat_time / 1000);
-	printf("%d has put down a fork\n", id);
-	printf("%d has put down a fork\n", id);
 }
 
-/*void	philo_offset(t_data *dat, int id)
+void	ft_pickup(t_data *dat, int id)
 {
-	if ((id % 2))
-		sleep(1);
-	if (id == 1)
-		sleep(1);
-}*/
+	int	fork1;
+	int	fork2;
+
+	fork1 = 1;
+	fork2 = 1;
+	while (fork1 || fork2)
+	{
+		pthread_mutex_lock(&dat->mutex);
+		if (dat->forks[id])
+		{
+			dat->forks[id] = 0;
+			printf("<%d> %d has taken fork %d\n", ft_time(), id, id);
+			fork1 = 0;
+		}
+		if (dat->forks[(id - 1) % dat->num_philos])
+		{
+			dat->forks[(id - 1) % dat->num_philos] = 0;
+			printf("<%d> %d has taken fork %d\n", ft_time(), id, (id - 1) % dat->num_philos);
+			fork2 = 0;
+		}
+		pthread_mutex_unlock(&dat->mutex);
+	}
+}
+
+void	ft_putdown(t_data *dat, int id)
+{
+	pthread_mutex_lock(&dat->mutex);
+	dat->forks[id] = 1;
+	pthread_mutex_unlock(&dat->mutex);
+	printf("<%d> %d has put down a fork\n", ft_time(), id);
+	pthread_mutex_lock(&dat->mutex);
+	dat->forks[(id - 1) % dat->num_philos] = 1;
+	pthread_mutex_unlock(&dat->mutex);
+	printf("<%d> %d has put down a fork\n", ft_time(), id);
+}
 
 void	philo_sleep(t_data *dat, int id)
 {
+	printf("<%d> %d is sleeping\n", ft_time(), id);
 	sleep(dat->sleep_time / 1000);
-	printf("%d is eating\n", id);
+	printf("<%d> %d is thinking\n", ft_time(), id);
+}
+
+void	wait_for_others(t_data *dat)
+{
+	while (1)
+	{
+		pthread_mutex_lock(&dat->mutex);
+		if (dat->sitting == dat->num_philos - 1)
+			break ;
+		pthread_mutex_unlock(&dat->mutex);
+	//	sleep(1);
+	}
 }
 
 void	philo_does_things(t_data *dat, int id, int *is_sitting)
 {
 	pthread_mutex_lock(&dat->mutex);
-	if (*is_sitting && dat->sitting == dat->num_philos - 1)
-	{
-		pthread_mutex_unlock(&dat->mutex);
-		//ft_pickup();
-		philo_eat(dat, id);
-		philo_sleep(dat, id);
-		//ft_putdown();
-		pthread_mutex_lock(&dat->mutex);
-	}
-	else if (*is_sitting && dat->sitting == dat->num_philos)
+	if (*is_sitting && dat->sitting == dat->num_philos)
 	{
 		*is_sitting = 0;
 		dat->sitting -= 1;
-	//	printf("philo %d stood up\n", id);
+	//	printf("<%d> %d stood up\n", ft_time(), id);
 	}
-	else
+	else if (!*is_sitting)
 	{
 		*is_sitting = 1;
 		dat->sitting += 1;
-		wait_for_others()
-	//	printf("philo %d sat down\n", id);
+	//	printf("<%d> %d sat down\n", ft_time(), id);
+	}
+	if (*is_sitting && dat->sitting == dat->num_philos - 1)
+	{
+		pthread_mutex_unlock(&dat->mutex);
+		ft_pickup(dat, id);
+		philo_eat(dat, id);
+		ft_putdown(dat, id);
+		philo_sleep(dat, id);
+		pthread_mutex_lock(&dat->mutex);
 	}
 //	printf("sitting: %d\n", dat->sitting);
 	pthread_mutex_unlock(&dat->mutex);
