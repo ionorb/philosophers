@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 18:02:53 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:39:39 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,9 @@ typedef struct s_data
 void	ft_putstr_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 int		ft_atoi(const char *nptr);
+
+//init
+t_data	*init_data(int ac, char **av);
+void	init_forks(t_data *data);
+void	ft_exit_msg(char *msg);
 #endif
