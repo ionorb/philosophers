@@ -14,7 +14,7 @@ CC 				=	gcc
 
 RM				=	rm -f
 
-CFLAGS			=	-g3 -Wall -Wextra -Werror -fsanitize=thread
+CFLAGS			=	-g3 -Wall -Wextra -Werror
 
 PFLAGS			=	-lpthread
 

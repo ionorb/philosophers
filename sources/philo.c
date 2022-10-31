@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 18:03:13 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 23:07:41 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 23:11:03 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 
 void	philo_eat(t_data *dat, t_philo *philo)
 {
+	pthread_mutex_lock(&dat->mutex);
 	printf("<%ld> %d is eating\n", ft_time(philo->begin_time), philo->id);
+	pthread_mutex_unlock(&dat->mutex);
 	usleep(dat->eat_time * 1000);
 }
 
@@ -59,19 +61,23 @@ void	ft_putdown(t_data *dat, t_philo *philo)
 }
 
 void	philo_sleep(t_data *dat, t_philo *philo)
-{
+{	
+	pthread_mutex_lock(&dat->mutex);
 	printf("<%ld> %d is sleeping\n", ft_time(philo->begin_time), philo->id);
+	pthread_mutex_unlock(&dat->mutex);
 	usleep(dat->sleep_time * 1000);
+	pthread_mutex_lock(&dat->mutex);
 	printf("<%ld> %d is thinking\n", ft_time(philo->begin_time), philo->id);
+	pthread_mutex_unlock(&dat->mutex);
 }
 
 int	philo_does_things(t_data *dat, t_philo *philo)
 {
 	ft_pickup(dat, philo);
-	printf("time since lastmeal %ld\n", ft_time(philo->begin_time) - philo->last_meal);
+	//printf("time since lastmeal %ld\n", ft_time(philo->begin_time) - philo->last_meal);
 	if (ft_time(philo->begin_time) - philo->last_meal > philo->longest_wait)
 		philo->longest_wait = ft_time(philo->begin_time) - philo->last_meal;
-	printf("longest wait: %d\n", philo->longest_wait);
+	//printf("longest wait: %d\n", philo->longest_wait);
 	philo_eat(dat, philo);
 	philo->last_meal = ft_time(philo->begin_time);
 	ft_putdown(dat, philo);
