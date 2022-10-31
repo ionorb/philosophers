@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/29 19:09:36 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 16:48:43 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ typedef struct s_data
 	int				cycle_length;
 	int				counter;
 	int				*forks;
+	int				sitting;
+	int				death;
 	pthread_mutex_t	mutex;
 }	t_data;
 
