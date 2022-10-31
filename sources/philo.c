@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 18:03:13 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 22:00:33 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 23:07:41 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,58 +67,19 @@ void	philo_sleep(t_data *dat, t_philo *philo)
 
 int	philo_does_things(t_data *dat, t_philo *philo)
 {
-	int	is_dead;
-
-	is_dead = 0;
 	ft_pickup(dat, philo);
+	printf("time since lastmeal %ld\n", ft_time(philo->begin_time) - philo->last_meal);
+	if (ft_time(philo->begin_time) - philo->last_meal > philo->longest_wait)
+		philo->longest_wait = ft_time(philo->begin_time) - philo->last_meal;
+	printf("longest wait: %d\n", philo->longest_wait);
 	philo_eat(dat, philo);
-	philo->last_meal = ft_time(philo->begin_time) - philo->begin_time;
-//	printf("lastmeal %d\n", *last_meal);
+	philo->last_meal = ft_time(philo->begin_time);
 	ft_putdown(dat, philo);
 	philo_sleep(dat, philo);
-	return (is_dead);
-}
-
-void	*mythread(void *data)
-{
-	t_data		*dat;
-	t_philo		*philo;
-	int			is_dead;
-
-	dat = data;
-	philo = malloc(sizeof (t_philo));
 	pthread_mutex_lock(&dat->mutex);
-	dat->counter++;
-	philo->id = dat->counter;
-	philo->begin_time = dat->begin_time;
+	if (ft_time(philo->begin_time) - philo->last_meal > dat->die_time)
+		dat->death = 1;
+	philo->is_dead = dat->death;
 	pthread_mutex_unlock(&dat->mutex);
-	is_dead = 0;
-	philo->last_meal = ft_time(philo->begin_time);
-	if (!(philo->id % 2))
-		usleep(100);
-	while (!is_dead)
-		is_dead = philo_does_things(dat, philo);
-//	sleep(0.9);
-	return (NULL);
-}
-
-int	main(int ac, char **av)
-{
-	pthread_t	*philo_id;
-	t_data		*data;
-	int			i;
-
-	data = init_data(ac, av);
-	if (!data)
-		ft_exit_msg("problem initializing data");
-	philo_id = malloc(((t_data *)data)->num_philos * sizeof (pthread_t));
-	i = -1;
-	while (++i < data->num_philos)
-		pthread_create(&philo_id[i], NULL, mythread, (void *)data);
-	i = -1;
-	while (++i < data->num_philos)
-		pthread_join(philo_id[i], NULL);
-	pthread_mutex_destroy(&data->mutex);
-	printf("fork[0]: %d, counter: %d\n", data->forks[0], data->counter);
-	return (0);
+	return (philo->is_dead);
 }

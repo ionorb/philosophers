@@ -2,7 +2,7 @@ NAME			=	philo
 
 SOURCES_DIR		=	sources
 
-SOURCES_FILES	=	philo.c utils.c init.c
+SOURCES_FILES	=	main.c philo.c utils.c init.c
 
 SOURCES			=	$(addprefix $(SOURCES_DIR)/, $(SOURCES_FILES))
 
@@ -14,7 +14,7 @@ CC 				=	gcc
 
 RM				=	rm -f
 
-CFLAGS			=	-g3 -Wall -Wextra -Werror
+CFLAGS			=	-g3 -Wall -Wextra -Werror -fsanitize=thread
 
 PFLAGS			=	-lpthread
 

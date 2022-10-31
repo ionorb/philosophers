@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 18:37:50 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 21:51:35 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 22:57:07 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ t_data	*init_data(int ac, char **av)
 	data->counter = 0;
 	data->death = 0;
 	data->sitting = data->num_philos;
-	data->death = 0;
-//	data->cycle_length = data->sleep_time + data->eat_time
 	pthread_mutex_init(&data->mutex, NULL);
 	init_forks(data);
 	gettimeofday(&current_time, NULL);

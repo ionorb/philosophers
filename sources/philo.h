@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 21:59:36 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/10/31 22:24:24 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ typedef struct s_philo
 {
 	long int	begin_time;
 	int			last_meal;
+	int			longest_wait;
 	int			id;
+	int			is_dead;
 }	t_philo;
 
 //utils
@@ -51,4 +53,7 @@ int		ft_atoi(const char *nptr);
 t_data	*init_data(int ac, char **av);
 void	init_forks(t_data *data);
 void	ft_exit_msg(char *msg);
+
+//philo
+int	philo_does_things(t_data *dat, t_philo *philo);
 #endif
