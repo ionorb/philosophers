@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 18:37:50 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/01 15:00:44 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/01 19:36:13 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ t_data	*init_data(int ac, char **av)
 	data->die_time = ft_atoi(av[2]);
 	data->eat_time = ft_atoi(av[3]);
 	data->sleep_time = ft_atoi(av[4]);
+	data->times_to_eat = -1;
+	if (ac == 6)
+		data->times_to_eat = ft_atoi(av[5]);
 	data->counter = 0;
 	init_forks(data);
 	data->death = 0;

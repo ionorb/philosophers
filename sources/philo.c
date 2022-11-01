@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 18:03:13 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/01 19:09:58 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/01 19:38:53 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,9 @@ void	philo_does_things(t_data *dat, t_philo *philo)
 	{
 		philo->last_meal = ft_time(philo->begin_time);
 		philo_eat(dat, philo);
-		philo_sleep(dat, philo);
+		philo->times_to_eat--;
+		if (philo->times_to_eat != 0)
+			philo_sleep(dat, philo);
 	}
 	check_death(dat, philo);
 }
