@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 22:23:04 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/01 15:33:54 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/01 16:46:57 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	*mythread(void *data)
 	philo->last_meal = ft_time(philo->begin_time);
 	philo->longest_wait = 0;
 	if (!(philo->id % 2))
-		usleep(100);
+		usleep(10000);
 	while (!philo->is_dead)
 		philo_does_things(dat, philo);
 	free(philo);

@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/01 15:23:44 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/01 16:53:05 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_philo
 	int			die_time;
 	int			eat_time;
 	int			sleep_time;
+	int			time_since_meal;
 }	t_philo;
 
 //utils
