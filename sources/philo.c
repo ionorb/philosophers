@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 18:03:13 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/01 18:53:10 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/01 19:09:58 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	check_death(t_data *dat, t_philo *philo)
 	pthread_mutex_lock(&dat->mutex);
 	philo->is_dead = dat->death;
 	pthread_mutex_unlock(&dat->mutex);
-	if (!philo->is_dead && ft_time(philo->begin_time) - philo->last_meal > philo->die_time)
+	if (!philo->is_dead && ft_time(philo->begin_time)
+		- philo->last_meal > philo->die_time)
 	{
 		pthread_mutex_lock(&dat->mutex);
 		printf("%ld %d died\n", ft_time(philo->begin_time), philo->id);
@@ -48,7 +49,6 @@ void	ft_pickup(t_data *dat, t_philo *philo)
 	int	fork1;
 	int	fork2;
 
-	
 	fork1 = 1;
 	fork2 = 1;
 	while (!philo->is_dead && (fork1 || fork2))
@@ -58,7 +58,8 @@ void	ft_pickup(t_data *dat, t_philo *philo)
 		if (!philo->is_dead && dat->forks[philo->id - 1])
 		{
 			dat->forks[philo->id - 1] = 0;
-			printf("%ld %d has taken a fork\n", ft_time(philo->begin_time), philo->id);
+			printf("%ld %d has taken a fork\n",
+				ft_time(philo->begin_time), philo->id);
 			fork1 = 0;
 		}
 		pthread_mutex_unlock(&dat->mutex);
@@ -67,8 +68,9 @@ void	ft_pickup(t_data *dat, t_philo *philo)
 		pthread_mutex_lock(&dat->mutex);
 		if (!philo->is_dead && dat->forks[philo->id % dat->num_philos])
 		{
-			dat->forks[philo->id  % dat->num_philos] = 0;
-			printf("%ld %d has taken a fork\n", ft_time(philo->begin_time), philo->id);
+			dat->forks[philo->id % dat->num_philos] = 0;
+			printf("%ld %d has taken a fork\n",
+				ft_time(philo->begin_time), philo->id);
 			fork2 = 0;
 		}
 		pthread_mutex_unlock(&dat->mutex);

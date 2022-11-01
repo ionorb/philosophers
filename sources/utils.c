@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 22:37:38 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 21:58:56 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/01 19:09:14 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 long int	ft_time(long int begin_time)
 {
-	struct timeval current_time;
+	struct timeval	current_time;
 
 	gettimeofday(&current_time, NULL);
-	return (current_time.tv_sec * 1000 + current_time.tv_usec / 1000 - begin_time);
+	return (current_time.tv_sec * 1000
+		+ current_time.tv_usec / 1000 - begin_time);
 }
 
 void	ft_putstr_fd(char *s, int fd)
@@ -59,13 +60,6 @@ int	ft_whitespace(char c)
 	return (0);
 }
 
-int	ft_isdigit(char c)
-{
-	if (c >= 48 && c <= 57)
-		return (1);
-	return (0);
-}
-
 int	ft_atoi(const char *nptr)
 {
 	int	i;
@@ -84,7 +78,7 @@ int	ft_atoi(const char *nptr)
 		sign = -1;
 		i++;
 	}
-	while (ft_isdigit(nptr[i]))
+	while (nptr[i] >= 48 && nptr[i] <= 57)
 	{
 		result *= 10;
 		result += (nptr[i] - '0');
