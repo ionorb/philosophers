@@ -14,7 +14,9 @@ CC 				=	gcc
 
 RM				=	rm -f
 
-CFLAGS			=	-g3 -Wall -Wextra -Werror
+CFLAGS			=	-g3 -Wall -Wextra -Werror 
+
+SFLAGS			=	-g3 -fsanitize=thread
 
 PFLAGS			=	-lpthread
 
@@ -25,6 +27,9 @@ all:	$(NAME)
 
 $(NAME):	$(OBJECTS) $(HEADER)
 	$(CC) $(CFLAGS) $(PFLAGS) $(OBJECTS) -o $(NAME)
+
+sanitize:	$(OBJECTS) $(HEADER)
+	$(CC) $(SFLAGS) $(CFLAGS) $(OBJECTS) -o $(NAME)
 
 clean:
 	$(RM) $(OBJECTS)

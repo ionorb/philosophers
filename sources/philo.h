@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/10/31 22:24:24 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/01 14:12:31 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,8 @@ typedef struct s_data
 	int				die_time;
 	int				eat_time;
 	int				sleep_time;
-	int				cycle_length;
 	int				counter;
 	int				*forks;
-	int				sitting;
 	int				death;
 	long int		begin_time;
 	pthread_mutex_t	mutex;
