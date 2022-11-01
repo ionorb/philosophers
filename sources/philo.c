@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 18:03:13 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/01 17:48:49 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/01 18:53:10 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,8 @@ void	ft_pickup(t_data *dat, t_philo *philo)
 
 void	philo_sleep(t_data *dat, t_philo *philo)
 {	
-	int	slept;
+	int	endtime;
 
-	slept = 0;
 	check_death(dat, philo);
 	if (!philo->is_dead)
 	{
@@ -88,11 +87,11 @@ void	philo_sleep(t_data *dat, t_philo *philo)
 		printf("%ld %d is sleeping\n", ft_time(philo->begin_time), philo->id);
 		pthread_mutex_unlock(&dat->mutex);
 	}
-	while (!philo->is_dead && slept < philo->sleep_time)
+	endtime = ft_time(philo->begin_time) + philo->sleep_time;
+	while (!philo->is_dead && ft_time(philo->begin_time) < endtime)
 	{
 		usleep(1000);
 		check_death(dat, philo);
-		slept += 1;
 	}
 	if (!philo->is_dead)
 	{
