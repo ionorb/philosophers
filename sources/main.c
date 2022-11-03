@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 22:23:04 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/03 16:44:29 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/03 18:33:24 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,11 @@ void	*mythread(void *data)
 	philo->sleep_time = dat->sleep_time;
 	philo->times_to_eat = dat->times_to_eat;
 	pthread_mutex_unlock(&dat->mutex);
+	pthread_mutex_lock(&dat->starting_stall);
+	while (!dat->start)
+	{
+	}
+	pthread_mutex_unlock(&dat->starting_stall);
 	philo->is_dead = 0;
 	philo->last_meal = ft_time(philo->begin_time);
 	philo->longest_wait = 0;
@@ -41,22 +46,25 @@ void	*mythread(void *data)
 
 int	main(int ac, char **av)
 {
-	pthread_t	*philo_id;
-	t_data		*data;
-	int			i;
+	t_data			*data;
+	int				i;
+
 
 	data = init_data(ac, av);
 	if (!data)
 		ft_exit_msg("problem initializing data");
-	philo_id = malloc(((t_data *)data)->num_philos * sizeof (pthread_t));
+	i = -1;
+	pthread_mutex_init(&data->starting_stall, NULL);
+	data->start = 0;
+	while (++i < data->num_philos)
+		pthread_create(&data->philo_id[i], NULL, mythread, (void *)data);
+	data->start = 1;
 	i = -1;
 	while (++i < data->num_philos)
-		pthread_create(&philo_id[i], NULL, mythread, (void *)data);
-	i = -1;
-	while (++i < data->num_philos)
-		pthread_join(philo_id[i], NULL);
+		pthread_join(data->philo_id[i], NULL);
 	pthread_mutex_destroy(&data->mutex);
-	free(philo_id);
+	pthread_mutex_destroy(&data->starting_stall);
+	free(data->philo_id);
 	free(data->forks);
 	free(data);
 	return (0);
