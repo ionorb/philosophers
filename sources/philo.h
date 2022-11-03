@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/03 18:31:16 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/03 18:59:15 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,9 @@ typedef struct s_data
 	int				*forks;
 	int				death;
 	int				times_to_eat;
-	int				start;
 	long int		begin_time;
 	pthread_t		*philo_id;
 	pthread_mutex_t	mutex;
-	pthread_mutex_t	starting_stall;
 }	t_data;
 
 typedef struct s_philo

@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 18:37:50 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/03 18:22:41 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/03 19:00:48 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_data	*init_data(int ac, char **av)
 	if (ac < 5)
 		ft_exit_msg("not enough arguments");
 	data = malloc(sizeof (t_data));
-	if (!data || init_mutex(data) || init_forks(data, av) || init_id(data)) 
+	if (!data || init_mutex(data) || init_forks(data, av) || init_id(data))
 		return (NULL);
 	data->die_time = ft_atoi(av[2]);
 	data->eat_time = ft_atoi(av[3]);
