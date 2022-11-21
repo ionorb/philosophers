@@ -6,26 +6,11 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 22:23:04 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/21 21:06:05 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/03 19:01:00 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-void	philo_does_things(t_data *dat, t_philo *philo)
-{
-	ft_pickup(dat, philo);
-	check_death(dat, philo);
-	if (!philo->is_dead && philo->times_to_eat)
-	{
-		philo->last_meal = ft_time(philo->begin_time);
-		philo_eat(dat, philo);
-		philo->times_to_eat--;
-		if (philo->times_to_eat != 0)
-			philo_sleep(dat, philo);
-	}
-	check_death(dat, philo);
-}
 
 void	*mythread(void *data)
 {

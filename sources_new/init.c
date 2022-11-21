@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 18:37:50 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/21 22:08:37 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/03 19:00:48 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@ void	ft_exit_msg(char *msg)
 	exit(1);
 }
 
-int	init_forks(t_data *data)
+int	init_forks(t_data *data, char **av)
 {
 	int	i;
 
 	i = -1;
+	data->num_philos = ft_atoi(av[1]);
 	data->forks = malloc(data->num_philos * sizeof (int));
 	if (!data->forks)
 		return (-1);
@@ -31,20 +32,12 @@ int	init_forks(t_data *data)
 	return (0);
 }
 
-int	init_mutex(t_data *data, char **av)
+int	init_mutex(t_data *data)
 {
-	int	i;
-
-	i = 0;
-	data->num_philos = ft_atoi(av[1]);
 	if (pthread_mutex_init(&data->mutex, NULL) != 0)
-		return (-1);
-	data->fork_mutex = malloc(sizeof (pthread_mutex_t) * data->num_philos);
-	while (i < data->num_philos)
 	{
-		if (pthread_mutex_init(&data->fork_mutex[i], NULL) != 0)
-			return (-1);
-		i++;
+		ft_putstr_fd("", 2);
+		return (-1);
 	}
 	return (0);
 }
@@ -65,7 +58,7 @@ t_data	*init_data(int ac, char **av)
 	if (ac < 5)
 		ft_exit_msg("not enough arguments");
 	data = malloc(sizeof (t_data));
-	if (!data || init_mutex(data, av) || init_forks(data) || init_id(data))
+	if (!data || init_mutex(data) || init_forks(data, av) || init_id(data))
 		return (NULL);
 	data->die_time = ft_atoi(av[2]);
 	data->eat_time = ft_atoi(av[3]);

@@ -2,7 +2,7 @@ NAME			=	philo
 
 SOURCES_DIR		=	sources
 
-SOURCES_FILES	=	main.c philo.c utils.c init.c
+SOURCES_FILES	=	main.c actions.c utils.c init.c
 
 SOURCES			=	$(addprefix $(SOURCES_DIR)/, $(SOURCES_FILES))
 

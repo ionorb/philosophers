@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/21 21:58:33 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/21 20:59:54 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ typedef struct s_data
 	long int		begin_time;
 	pthread_t		*philo_id;
 	pthread_mutex_t	mutex;
-	pthread_mutex_t	*fork_mutex;
 }	t_data;
 
 typedef struct s_philo
