@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 22:23:04 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/21 21:06:05 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/21 23:02:27 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	*mythread(void *data)
 	philo->eat_time = dat->eat_time;
 	philo->sleep_time = dat->sleep_time;
 	philo->times_to_eat = dat->times_to_eat;
+	philo->num_philos = dat->num_philos;
 	pthread_mutex_unlock(&dat->mutex);
 	philo->is_dead = 0;
 	philo->last_meal = ft_time(philo->begin_time);

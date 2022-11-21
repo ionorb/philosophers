@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 18:03:13 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/21 21:54:58 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/21 23:06:53 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ void	philo_eat(t_data *dat, t_philo *philo)
 		printf("%ld %d is eating\n", ft_time(philo->begin_time), philo->id);
 	pthread_mutex_unlock(&dat->mutex);
 	usleep(philo->eat_time * 1000);
-	pthread_mutex_lock(&dat->mutex);
+	pthread_mutex_lock(&dat->fork_mutex[philo->id - 1]);
 	dat->forks[philo->id - 1] = 1;
-	pthread_mutex_unlock(&dat->mutex);
-	pthread_mutex_lock(&dat->mutex);
-	dat->forks[philo->id % dat->num_philos] = 1;
-	pthread_mutex_unlock(&dat->mutex);
+	pthread_mutex_unlock(&dat->fork_mutex[philo->id - 1]);
+	pthread_mutex_lock(&dat->fork_mutex[philo->id % philo->num_philos]);
+	dat->forks[philo->id % philo->num_philos] = 1;
+	pthread_mutex_unlock(&dat->fork_mutex[philo->id % philo->num_philos]);
 }
 
 void	take_fork(t_data *dat, t_philo *philo, int i)
@@ -49,12 +49,14 @@ void	take_fork(t_data *dat, t_philo *philo, int i)
 	if (i == 1)
 		index = philo->id - 1;
 	else
-		index = philo->id % dat->num_philos;
+		index = philo->id % philo->num_philos;
 	if (!philo->is_dead && dat->forks[index])
 	{
 		dat->forks[index] = 0;
+		pthread_mutex_lock(&dat->mutex);
 		printf("%ld %d has taken a fork\n",
 			ft_time(philo->begin_time), philo->id);
+		pthread_mutex_unlock(&dat->mutex);
 		if (i == 1)
 			philo->fork1 = 0;
 		else
@@ -69,14 +71,14 @@ void	ft_pickup(t_data *dat, t_philo *philo)
 	while (!philo->is_dead && (philo->fork1 || philo->fork2))
 	{
 		check_death(dat, philo);
-		pthread_mutex_lock(&dat->mutex);
+		pthread_mutex_lock(&dat->fork_mutex[philo->id - 1]);
 		take_fork(dat, philo, 1);
-		pthread_mutex_unlock(&dat->mutex);
+		pthread_mutex_unlock(&dat->fork_mutex[philo->id - 1]);
 		usleep(1);
 		check_death(dat, philo);
-		pthread_mutex_lock(&dat->mutex);
+		pthread_mutex_lock(&dat->fork_mutex[philo->id % philo->num_philos]);
 		take_fork(dat, philo, 2);
-		pthread_mutex_unlock(&dat->mutex);
+		pthread_mutex_unlock(&dat->fork_mutex[philo->id % philo->num_philos]);
 	}
 }
 

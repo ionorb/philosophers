@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/21 21:58:33 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/21 22:26:26 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_philo
 	int			times_to_eat;
 	int			fork1;
 	int			fork2;
+	int			num_philos;
 }	t_philo;
 
 //utils
