@@ -6,7 +6,7 @@
 /*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 22:23:04 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/21 23:02:27 by yridgway         ###   ########.fr       */
+/*   Updated: 2022/11/22 16:02:45 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,13 @@
 
 void	philo_does_things(t_data *dat, t_philo *philo)
 {
-	ft_pickup(dat, philo);
+	pthread_mutex_lock(&dat->mutex);
 	check_death(dat, philo);
+	pthread_mutex_unlock(&dat->mutex);
+	ft_pickup(dat, philo);
+	pthread_mutex_lock(&dat->mutex);
+	check_death(dat, philo);
+	pthread_mutex_unlock(&dat->mutex);
 	if (!philo->is_dead && philo->times_to_eat)
 	{
 		philo->last_meal = ft_time(philo->begin_time);
@@ -24,7 +29,9 @@ void	philo_does_things(t_data *dat, t_philo *philo)
 		if (philo->times_to_eat != 0)
 			philo_sleep(dat, philo);
 	}
+	pthread_mutex_lock(&dat->mutex);
 	check_death(dat, philo);
+	pthread_mutex_unlock(&dat->mutex);
 }
 
 void	*mythread(void *data)
