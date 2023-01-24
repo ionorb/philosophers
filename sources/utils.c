@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 22:37:38 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/01 19:09:14 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/24 20:52:59 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
 long int	ft_time(long int begin_time)
 {
@@ -21,36 +21,13 @@ long int	ft_time(long int begin_time)
 		+ current_time.tv_usec / 1000 - begin_time);
 }
 
-void	ft_putstr_fd(char *s, int fd)
+void	write_philo_msg(t_philo *philo, t_data *dat, char *msg)
 {
-	int	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	write(fd, s, i);
-}
-
-void	ft_putnbr_fd(int n, int fd)
-{
-	char	num;
-
-	if (n == -2147483648)
-		write(fd, "-2147483648", 11);
-	else
-	{
-		if (n < 0)
-		{
-			write(fd, "-", 1);
-			n *= -1;
-		}
-		if (n > 9)
-		{
-			ft_putnbr_fd(n / 10, fd);
-		}
-		num = n % 10 + '0';
-		write(fd, &num, 1);
-	}
+	pthread_mutex_lock(&dat->mutex);
+	check_death(dat, philo);
+	if (!philo->is_dead)
+		printf("%ld %d %s\n", ft_time(philo->begin_time), philo->id, msg);
+	pthread_mutex_unlock(&dat->mutex);
 }
 
 int	ft_whitespace(char c)

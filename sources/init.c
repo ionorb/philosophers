@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 18:37:50 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/21 22:08:37 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/24 20:09:32 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
 void	ft_exit_msg(char *msg)
 {
-	ft_putstr_fd(msg, 2);
+	printf("%s\n", msg);
 	exit(1);
 }
 

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 22:23:04 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/22 16:02:45 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/24 20:56:20 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
 void	philo_does_things(t_data *dat, t_philo *philo)
 {

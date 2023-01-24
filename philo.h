@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yridgway <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2022/11/21 22:26:26 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/24 20:11:29 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_philo
 }	t_philo;
 
 //utils
+void		write_philo_msg(t_philo *philo, t_data *dat, char *msg);
 long int	ft_time(long int begin_time);
 void		ft_putstr_fd(char *s, int fd);
 void		ft_putnbr_fd(int n, int fd);
@@ -67,4 +68,5 @@ void		check_death(t_data *dat, t_philo *philo);
 void		philo_eat(t_data *dat, t_philo *philo);
 void		philo_sleep(t_data *dat, t_philo *philo);
 void		ft_pickup(t_data *dat, t_philo *philo);
+
 #endif
