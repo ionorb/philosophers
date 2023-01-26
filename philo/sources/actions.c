@@ -6,7 +6,7 @@
 /*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 18:03:13 by yridgway          #+#    #+#             */
-/*   Updated: 2023/01/24 20:59:18 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/26 22:23:56 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	check_death(t_data *dat, t_philo *philo)
 {
-	if (!dat->death && ft_time(philo->begin_time)
-		- philo->last_meal > philo->die_time)
+	if (!dat->death && (ft_time(philo->begin_time) - \
+	philo->last_meal > philo->die_time || philo->die_time == 0))
 	{
 		printf("%ld %d died\n", ft_time(philo->begin_time), philo->id);
 		dat->death = 1;

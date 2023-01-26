@@ -6,7 +6,7 @@
 /*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 18:37:50 by yridgway          #+#    #+#             */
-/*   Updated: 2023/01/25 19:21:10 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/26 22:04:37 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ int	init_mutex(t_data *data, char **av)
 	if (pthread_mutex_init(&data->mutex, NULL) != 0)
 		return (write(2, "problem initializing mutex\n", 28), -1);
 	data->fork_mutex = malloc(sizeof (pthread_mutex_t) * data->num_philos);
+	if (!data->fork_mutex)
+	{
+		pthread_mutex_destroy(&data->mutex);
+		return (write(2, "problem initializing fork_mutex\n", 33), -1);
+	}
 	while (i < data->num_philos)
 	{
 		if (pthread_mutex_init(&data->fork_mutex[i], NULL) != 0)
@@ -78,13 +83,11 @@ t_data	*init_data(int ac, char **av)
 	t_data			*data;
 	struct timeval	current_time;
 
-	if (ac < 5)
-		ft_exit_msg("not enough arguments");
-	if (ac > 6)
-		ft_exit_msg("too many arguments");
 	data = malloc(sizeof (t_data));
-	if (!data || init_mutex(data, av) || init_forks(data) || init_id(data))
+	if (!data)
 		return (NULL);
+	if (init_mutex(data, av) || init_forks(data) || init_id(data))
+		return (free(data), NULL);
 	data->die_time = ft_atoi(av[2]);
 	data->eat_time = ft_atoi(av[3]);
 	data->sleep_time = ft_atoi(av[4]);

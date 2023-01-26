@@ -10,7 +10,7 @@ HEADER			=	philo.h
 
 OBJECTS			=	$(SOURCES:.c=.o)
 
-CC 				=	gcc
+CC 				=	cc
 
 RM				=	rm -f
 

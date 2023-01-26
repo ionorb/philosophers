@@ -6,7 +6,7 @@
 /*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 22:23:04 by yridgway          #+#    #+#             */
-/*   Updated: 2023/01/25 18:55:27 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/26 22:18:36 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,27 +74,55 @@ void	*mythread(void *data)
 	return (NULL);
 }
 
+void	ft_check_args(int ac, char **av)
+{
+	int	i;
+	int	j;
+
+	if (ac < 5)
+		ft_exit_msg("not enough arguments");
+	if (ac > 6)
+		ft_exit_msg("too many arguments");
+	while (--ac)
+	{
+		i = -1;
+		j = 0;
+		while (av[ac][++i])
+		{
+			if (av[ac][i] < '0' || av[ac][i] > '9')
+				ft_exit_msg("arguments must be numbers");
+			j++;
+		}
+		if (j > 10)
+			ft_exit_msg("arguments must be less than 10 digits");
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_data			*data;
 	int				i;
 
+	ft_check_args(ac, av);
 	data = init_data(ac, av);
 	if (!data)
 		ft_exit_msg("problem initializing data");
 	i = -1;
 	while (++i < data->num_philos)
-		pthread_create(&data->philo_id[i], NULL, mythread, (void *)data);
+	{
+		if (pthread_create(&data->philo_id[i], NULL, mythread, (void *)data))
+			return (write(1, "problem creating threads\n", 26), 1);
+	}
 	i = -1;
 	while (++i < data->num_philos)
-		pthread_join(data->philo_id[i], NULL);
+	{
+		if (pthread_join(data->philo_id[i], NULL))
+			return (write(1, "problem joining threads\n", 25), 1);
+	}
 	i = -1;
 	while (++i < data->num_philos)
 		pthread_mutex_destroy(&data->fork_mutex[i]);
 	pthread_mutex_destroy(&data->mutex);
-	free(data->fork_mutex);
-	free(data->philo_id);
-	free(data->forks);
-	free(data);
-	return (0);
+	return (free(data->fork_mutex), free(data->philo_id), \
+	free(data->forks), free(data), 0);
 }
