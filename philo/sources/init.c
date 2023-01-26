@@ -6,7 +6,7 @@
 /*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 18:37:50 by yridgway          #+#    #+#             */
-/*   Updated: 2023/01/24 20:09:32 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/25 19:21:10 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,13 @@ int	init_forks(t_data *data)
 	i = -1;
 	data->forks = malloc(data->num_philos * sizeof (int));
 	if (!data->forks)
+	{
+		while (++i < data->num_philos)
+			pthread_mutex_destroy(&data->fork_mutex[i]);
+		free(data->fork_mutex);
+		pthread_mutex_destroy(&data->mutex);
 		return (-1);
+	}
 	while (++i < data->num_philos)
 		data->forks[i] = 1;
 	return (0);
@@ -38,12 +44,12 @@ int	init_mutex(t_data *data, char **av)
 	i = 0;
 	data->num_philos = ft_atoi(av[1]);
 	if (pthread_mutex_init(&data->mutex, NULL) != 0)
-		return (-1);
+		return (write(2, "problem initializing mutex\n", 28), -1);
 	data->fork_mutex = malloc(sizeof (pthread_mutex_t) * data->num_philos);
 	while (i < data->num_philos)
 	{
 		if (pthread_mutex_init(&data->fork_mutex[i], NULL) != 0)
-			return (-1);
+			return (write(2, "problem initializing fork_mutex\n", 33), -1);
 		i++;
 	}
 	return (0);
@@ -51,9 +57,19 @@ int	init_mutex(t_data *data, char **av)
 
 int	init_id(t_data *data)
 {
+	int	i;
+
+	i = -1;
 	data->philo_id = malloc(data->num_philos * sizeof (pthread_t));
 	if (!data->philo_id)
-		return (-1);
+	{
+		while (++i < data->num_philos)
+			pthread_mutex_destroy(&data->fork_mutex[i]);
+		free(data->fork_mutex);
+		pthread_mutex_destroy(&data->mutex);
+		free(data->forks);
+		return (write(2, "problem initializing philo_id\n", 31), -1);
+	}
 	return (0);
 }
 
@@ -64,6 +80,8 @@ t_data	*init_data(int ac, char **av)
 
 	if (ac < 5)
 		ft_exit_msg("not enough arguments");
+	if (ac > 6)
+		ft_exit_msg("too many arguments");
 	data = malloc(sizeof (t_data));
 	if (!data || init_mutex(data, av) || init_forks(data) || init_id(data))
 		return (NULL);
