@@ -6,7 +6,7 @@
 /*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 22:37:38 by yridgway          #+#    #+#             */
-/*   Updated: 2023/01/24 20:52:59 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/28 20:27:08 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,11 @@ int	ft_whitespace(char c)
 	return (0);
 }
 
-int	ft_atoi(const char *nptr)
+long	ft_atoi(const char *nptr)
 {
-	int	i;
-	int	sign;
-	int	result;
+	long	i;
+	long	sign;
+	long	result;
 
 	result = 0;
 	sign = 1;
@@ -63,3 +63,26 @@ int	ft_atoi(const char *nptr)
 	}
 	return (result * sign);
 }
+
+void	ft_free(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->num_philos)
+		pthread_mutex_destroy(&data->fork_mutex[i++]);
+	pthread_mutex_destroy(&data->mutex);
+	free(data->fork_mutex);
+	free(data->philo_id);
+	free(data->forks);
+}
+
+// void	*ft_malloc_fail(long size)
+// {
+// 	static int	i = 0;
+
+// 	i++;
+// 	if (global--)
+// 		return (malloc(size));
+// 	return (printf("failed on malloc no. %d\n", i), NULL);
+// }

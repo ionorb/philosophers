@@ -6,7 +6,7 @@
 /*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 17:51:45 by yridgway          #+#    #+#             */
-/*   Updated: 2023/01/24 20:11:29 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/28 20:27:04 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <sys/time.h>
+# include <limits.h>
+
+// extern	int	global;
 
 typedef struct s_data
 {
@@ -57,10 +60,11 @@ void		write_philo_msg(t_philo *philo, t_data *dat, char *msg);
 long int	ft_time(long int begin_time);
 void		ft_putstr_fd(char *s, int fd);
 void		ft_putnbr_fd(int n, int fd);
-int			ft_atoi(const char *nptr);
+long		ft_atoi(const char *nptr);
+void		ft_free(t_data *data);
 
 //init
-t_data		*init_data(int ac, char **av);
+int			init_data(int ac, char **av, t_data *data);
 void		ft_exit_msg(char *msg);
 
 //actions
@@ -68,5 +72,7 @@ void		check_death(t_data *dat, t_philo *philo);
 void		philo_eat(t_data *dat, t_philo *philo);
 void		philo_sleep(t_data *dat, t_philo *philo);
 void		ft_pickup(t_data *dat, t_philo *philo);
+
+// void	*ft_malloc_fail(long size);
 
 #endif
