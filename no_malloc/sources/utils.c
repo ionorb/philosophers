@@ -6,7 +6,7 @@
 /*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/28 22:37:38 by yridgway          #+#    #+#             */
-/*   Updated: 2023/01/28 22:35:12 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/29 15:00:51 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,14 @@ int	init_mutex(t_data *data)
 		return (write(2, "problem initializing mutex\n", 28), -1);
 	while (i < data->num_philos)
 	{
-		if (pthread_mutex_init(&data->fork_mutex[i++], NULL))
+		if (pthread_mutex_init(&data->fork_mutex[i], NULL))
+		{
+			while (--i >= 0)
+				pthread_mutex_destroy(&data->fork_mutex[i]);
+			pthread_mutex_destroy(&data->mutex);
 			return (write(2, "problem initializing fork mutex\n", 33), -1);
+		}
+		i++;
 	}
 	return (0);
 }

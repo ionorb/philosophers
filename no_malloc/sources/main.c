@@ -6,7 +6,7 @@
 /*   By: yridgway <yridgway@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 22:23:04 by yridgway          #+#    #+#             */
-/*   Updated: 2023/01/28 22:30:23 by yridgway         ###   ########.fr       */
+/*   Updated: 2023/01/29 15:23:31 by yridgway         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,30 +34,25 @@ void	philo_does_things(t_data *dat, t_philo *philo)
 	pthread_mutex_unlock(&dat->mutex);
 }
 
-void	init_philo(t_data *dat, t_philo *philo)
-{
-	pthread_mutex_lock(&dat->mutex);
-	dat->counter++;
-	philo->id = dat->counter;
-	philo->begin_time = dat->begin_time;
-	philo->die_time = dat->die_time;
-	philo->eat_time = dat->eat_time;
-	philo->sleep_time = dat->sleep_time;
-	philo->times_to_eat = dat->times_to_eat;
-	philo->num_philos = dat->num_philos;
-	pthread_mutex_unlock(&dat->mutex);
-	philo->is_dead = 0;
-	philo->last_meal = ft_time(philo->begin_time);
-	philo->longest_wait = 0;
-}
-
 void	*mythread(void *data)
 {
 	t_data		*dat;
 	t_philo		philo;
 
 	dat = (t_data *)data;
-	init_philo(dat, &philo);
+	pthread_mutex_lock(&dat->mutex);
+	dat->counter++;
+	philo.id = dat->counter;
+	philo.begin_time = dat->begin_time;
+	philo.die_time = dat->die_time;
+	philo.eat_time = dat->eat_time;
+	philo.sleep_time = dat->sleep_time;
+	philo.times_to_eat = dat->times_to_eat;
+	philo.num_philos = dat->num_philos;
+	pthread_mutex_unlock(&dat->mutex);
+	philo.is_dead = 0;
+	philo.last_meal = ft_time(philo.begin_time);
+	philo.longest_wait = 0;
 	if (!(philo.id % 2))
 		usleep(10000);
 	while (!philo.is_dead && philo.times_to_eat)
@@ -89,26 +84,34 @@ int	init_data(int ac, char **av, t_data *data)
 	return (0);
 }
 
+void	ft_free(t_data data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data.num_philos)
+		pthread_mutex_destroy(&data.fork_mutex[i++]);
+	pthread_mutex_destroy(&data.mutex);
+}
+
 int	main(int ac, char **av)
 {
 	t_data			data;
 	int				i;
 
-	if (ft_check_args(ac, av))
-		return (1);
-	if (init_data(ac, av, &data))
+	if (ft_check_args(ac, av) || init_data(ac, av, &data))
 		return (1);
 	i = -1;
 	while (++i < data.num_philos)
 	{
 		if (pthread_create(&data.philo_id[i], NULL, mythread, (void *)&data))
-			return (write(1, "problem creating threads\n", 26), 1);
+			return (ft_free(data), write(1, "problem creating thread\n", 25), 1);
 	}
 	i = -1;
 	while (++i < data.num_philos)
 	{
 		if (pthread_join(data.philo_id[i], NULL))
-			return (write(1, "problem joining threads\n", 25), 1);
+			return (ft_free(data), write(1, "problem joining threads\n", 25), 1);
 	}
-	return (0);
+	return (ft_free(data), 0);
 }
